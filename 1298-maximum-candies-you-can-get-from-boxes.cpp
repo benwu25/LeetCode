@@ -39,10 +39,18 @@ public:
                 int contained_box = containedBoxes[box][i];
                 is_reachable[contained_box] = 1;
             }
-            for (int i = 0; i < status.size(); ++i) {
-                if (status[i] == 1 && is_reachable[i] == 1 && visited[i] == 0) {
-                    ready_boxes.emplace_back(i);
-                    visited[i] = 1;
+            for (int i = 0; i < keys[box].size(); ++i) {
+                int key = keys[box][i];
+                if (is_reachable[key] == 1 && visited[key] == 0) {
+                    ready_boxes.emplace_back(key);
+                    visited[key] = 1;
+                }
+            }
+            for (int i = 0; i < containedBoxes[box].size(); ++i) {
+                int contained_box = containedBoxes[box][i];
+                if (status[contained_box] == 1 && visited[contained_box] == 0) {
+                    ready_boxes.emplace_back(contained_box);
+                    visited[contained_box] = 1;
                 }
             }
         }
