@@ -32,3 +32,6 @@ public:
         return -1;
     }
 };
+
+// lessons: don't exclude a valid value always, keep it as part of the valid range unless you're guaranteed to find a better valid answer
+// recall: ceil(a/b) = a/b + (a % b != 0)
