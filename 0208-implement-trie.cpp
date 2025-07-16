@@ -18,8 +18,8 @@ public:
     Trie() : roots(vector<unique_ptr<node>>()) {}
 
     void insert(string word) {
-        // initialize vec pointer to point to current vec, iterate through till find next
-        // and update pointer. If reach end, append to vec with the next character
+        // initialize vec pointer to point to current vec, iterate
+        // till next char is found, or append to the end.
         vector<unique_ptr<node>> *curr_vec = &roots;
         for (int i = 0; i < word.size(); ++i) {
             char c = word[i];
@@ -63,7 +63,6 @@ public:
         return false;
     }
 
-    // not startsWith.
     bool startsWith(string prefix) {
         vector<unique_ptr<node>> *curr_vec = &roots;
         for (int i = 0; i < prefix.size(); ++i) {
