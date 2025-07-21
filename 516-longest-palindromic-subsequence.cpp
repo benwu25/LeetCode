@@ -4,9 +4,8 @@ using namespace std;
 class Solution {
 public:
     int longestPalindromeSubseq(string s) {
-        int **best = new int*[s.size()];
+        int best[s.size()][s.size()];
         for (int i = 0; i < s.size(); ++i) {
-            best[i] = new int[s.size()];
             best[i][i] = 1;
             if (i < s.size()-1) {
                 best[i][i+1] = (s[i]==s[i+1]) ? 2 : 1;
@@ -27,11 +26,6 @@ public:
                 }
             }
         }
-        int res = best[0][s.size()-1];
-        for (int i = 0; i < s.size(); ++i) {
-            delete[] best[i];
-        }
-        delete[] best;
-        return res;
+        return best[0][s.size()-1];
     }
 };
