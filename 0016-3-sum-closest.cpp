@@ -1,35 +1,46 @@
-#include <vector>
-#include <algorithm>
-using namespace std;
+#include <iostream>
+
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
+
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
 
 class Solution {
 public:
-    void find_closest_sum(vector<int> &nums, int next, int target, int i, int *closest_sum) {
-        int l = i + 1, r = nums.size() - 1;
-        while (l < r && r < nums.size()) {
-            int three_sum = next + nums[l] + nums[r];
-            if (three_sum > target) {
-                --r;
-            } else if (three_sum < target) {
-                ++l;
-            } else {
-                *closest_sum = target;
-                return;
-            }
-
-            if (std::abs(target - three_sum) < std::abs(target - *closest_sum))
-                *closest_sum = three_sum;
-        }
+    Node* connect(Node* root) {
+        // records the next node that needs to be populated for a given level
+        conn(root);
+        return root;
     }
 
-    int threeSumClosest(vector<int>& nums, int target) {
-        std::sort(nums.begin(), nums.end());
-        int closest_sum = nums[0] + nums[1] + nums[2];
-        for (int i = 0; i < nums.size(); ++i) {
-            int next = nums[i];
-            find_closest_sum(nums, next, target, i, &closest_sum);
+    // O(1) space solution
+    void conn(Node *curr) {
+        if (!curr)
+            return;
+
+        // connect children
+        if (curr->left) {
+            // connect left child
+            curr->left->next = curr->right;
+
+            // connect right child
+            if (curr->next) {
+                curr->right->next = curr->next->left;
+            }
         }
 
-        return closest_sum;
+        conn(curr->left);
+        conn(curr->right);
     }
 };
