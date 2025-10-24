@@ -1,35 +1,24 @@
 #include <vector>
-#include <deque>
 #include <unordered_set>
 using namespace std;
 
 class Solution {
 public:
-    bool bfs(int v, vector<vector<int>> &graph, unordered_set<int> &red, unordered_set<int> &blue, unordered_set<int> &visited) {
-        deque<int> q{v};
-        visited.insert(v);
+    bool dfs(int v, vector<vector<int>> &graph, unordered_set<int> &red, unordered_set<int> &blue) {
+        bool is_red = (red.contains(v)) ? true : false;
 
-        // choose red to start
-        red.insert(v);
+        for (auto &neighbor : graph[v]) {
+            if (is_red && red.contains(neighbor) || !is_red && blue.contains(neighbor))
+                return false;
 
-        while (q.size()) {
-            int next = q.front();
-            q.pop_front();
+            if (!red.contains(neighbor) && !blue.contains(neighbor)) {
+                if (is_red)
+                    blue.insert(neighbor);
+                else
+                    red.insert(neighbor);
 
-            bool is_red = (red.contains(next)) ? true : false;
-            for (auto &neighbor : graph[next]) {
-                if (is_red && red.contains(neighbor) || !is_red && blue.contains(neighbor))
+                if (!dfs(neighbor, graph, red, blue))
                     return false;
-
-                if (!visited.contains(neighbor)) {
-                    if (is_red)
-                        blue.insert(neighbor);
-                    else
-                        red.insert(neighbor);
-
-                    visited.insert(neighbor);
-                    q.push_back(neighbor);
-                }
             }
         }
 
@@ -37,21 +26,17 @@ public:
     }
 
     bool isBipartite(vector<vector<int>>& graph) {
-        unordered_set<int> red, blue, visited;
+        unordered_set<int> red, blue;
         for (int v = 0; v < graph.size(); ++v) {
-            if (!visited.contains(v))
-                if (!bfs(v, graph, red, blue, visited))
+            if (!red.contains(v) && !blue.contains(v)) {
+                // choose red to start
+                red.insert(v);
+
+                if (!dfs(v, graph, red, blue))
                     return false;
+            }
         }
 
         return true;
     }
 };
-
-/*
-    perform bfs traversal
-
-    for each node in bfs, check all neighbors.
-    if any have been colored and match this node, return false.
-    otherwise, color each unvisited (i.e., uncolored) node opposite from us.
-*/
